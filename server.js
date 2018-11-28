@@ -45,7 +45,7 @@ setInterval(() => {
       size: 20,
       health: 20,
       speed: 5,
-      spotRange: 50,
+      spotRange: 100,
     });
     zombies.push(zombie);
   }

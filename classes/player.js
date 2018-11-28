@@ -8,5 +8,13 @@ module.exports = class Player { // Created to simplify things..
     this.health = a.health;
     this.angle = a.angle;
     this.color = a.color;
+    this.isAlive = true;
   }
+
+  takeDamage(attack){
+    this.health-= attack;    
+    if(this.health <= 0) this.isAlive = false;//do something(kill player)
+    
+  }
+
 };

@@ -11,8 +11,9 @@ module.exports = class Zombie {
     this.speed = a.health;
     this.spotRange = a.spotRange;
     this.target = a.target;
-    this.roamX = 1;
-    this.roamY = 10;
+    this.roamX = Math.random() * 10;
+    this.roamY = Math.random() * 10;
+    this.attack = 100;
   }
 
   findTarget(players) {
@@ -24,7 +25,15 @@ module.exports = class Zombie {
       let dy = Math.abs(this.y - player.y);
       let distance = Math.hypot(dx, dy);
 
-      if (distance < this.spotRange && distance < nearestDistance) {
+      let zombieDiameter = this.size/2;
+      let playerDiameter = player.size/2;
+      //NOTE Attacks overlapping players
+      //This works only because entities are circular
+      if(distance <= zombieDiameter + playerDiameter) { //attacks overlapping players
+        player.takeDamage(this.attack);
+      } 
+
+      if (distance < this.spotRange && distance < nearestDistance) { //finds nearest player
         nearestDistance = distance;
         nearestTarget = player;
       } else {
@@ -40,9 +49,15 @@ module.exports = class Zombie {
   moveTowardsTarget() {
 
     
-    if (!this.target){
+    if (!this.target){//Zombies randomly roam the map when they can't spot any of the players
 
-      //Zombies randomly roam the map when they can't spot any of the players
+      //NOTE In case the roam variables grow too big 
+      if(this.roamX > Number.MAX_SAFE_INTEGER - 10){
+        this.roamX = Math.random() * 10;
+      }
+      if(this.roamY > Number.MAX_SAFE_INTEGER - 10){
+        this.roamY = Math.random() * 10;
+      }
       this.roamX += 0.05;
       this.roamY += 0.05;
       this.x += (Perlin.noise( this.roamX ) * 6) - 3;
